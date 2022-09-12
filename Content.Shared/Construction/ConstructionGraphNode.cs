@@ -7,7 +7,10 @@ namespace Content.Shared.Construction
     public sealed class ConstructionGraphNode
     {
         [DataField("actions", serverOnly: true)]
-        private IGraphAction[] _actions = Array.Empty<IGraphAction>();
+        private IGraphAction[] _constructionActions = Array.Empty<IGraphAction>();
+
+        [DataField("spawned", serverOnly: true)]
+        private IGraphAction[] _spawnActions = Array.Empty<IGraphAction>();
 
         [DataField("edges")]
         private ConstructionGraphEdge[] _edges = Array.Empty<ConstructionGraphEdge>();
@@ -20,7 +23,10 @@ namespace Content.Shared.Construction
         public IReadOnlyList<ConstructionGraphEdge> Edges => _edges;
 
         [ViewVariables]
-        public IReadOnlyList<IGraphAction> Actions => _actions;
+        public IReadOnlyList<IGraphAction> SpawnActions => _spawnActions;
+
+        [ViewVariables]
+        public IReadOnlyList<IGraphAction> ConstructionActions => _constructionActions;
 
         [ViewVariables]
         [DataField("entity")]

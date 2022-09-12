@@ -61,7 +61,7 @@ namespace Content.IntegrationTests.Tests.Construction
             {
                 foreach (var node in graph.Nodes.Values)
                 {
-                    foreach (var action in node.Actions)
+                    foreach (var action in node.ConstructionActions)
                     {
                         if (IsValid(action, protoMan, out var prototype)) continue;
 

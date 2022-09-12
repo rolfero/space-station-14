@@ -237,7 +237,7 @@ namespace Content.Server.Construction
                 return true;
 
             if(performActions)
-                PerformActions(uid, userUid, node.Actions);
+                PerformActions(uid, userUid, node.ConstructionActions);
 
             // An action might have deleted the entity... Account for this.
             if (!Exists(uid))

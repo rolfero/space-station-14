@@ -87,7 +87,7 @@ namespace Content.Server.Construction
             if (GetCurrentNode(uid, construction) is not {} node)
                 return;
 
-            PerformActions(uid, null, node.Actions);
+            PerformActions(uid, null, node.SpawnActions);
         }
 
         public override void Update(float frameTime)
