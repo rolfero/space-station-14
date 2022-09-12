@@ -21,6 +21,7 @@
   - type: TilePrying
   - type: LatticeCutting
   - type: Tool
+    useSound: /Audio/Items/jaws_pry.ogg
     qualities:
       - Prying
     speed: 1.5

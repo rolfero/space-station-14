@@ -22,6 +22,7 @@
         Slash: 10
   - type: TilePrying
   - type: Tool
+    useSound: /Audio/Items/jaws_pry.ogg
     qualities:
       - Prying
   - type: MultipleTool

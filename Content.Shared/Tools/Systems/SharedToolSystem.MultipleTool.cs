@@ -30,9 +30,16 @@ public abstract class SharedToolSystem : EntitySystem
 
     private void OnMultipleToolStartup(EntityUid uid, SharedMultipleToolComponent multiple, ComponentStartup args)
     {
-        // Only set the multiple tool if we have a tool component.
-        if(EntityManager.TryGetComponent(uid, out ToolComponent? tool))
-            SetMultipleTool(uid, multiple, tool);
+        if (multiple.Entries.Length <= multiple.CurrentEntry)
+        {
+            multiple.CurrentQualityName = Loc.GetString("multiple-tool-component-no-behavior");
+            return;
+        }
+
+        var current = multiple.Entries[multiple.CurrentEntry];
+
+        if (_protoMan.TryIndex(current.Behavior.First(), out ToolQualityPrototype? quality))
+            multiple.CurrentQualityName = Loc.GetString(quality.Name);
     }
 
     private void OnMultipleToolActivated(EntityUid uid, SharedMultipleToolComponent multiple, ActivateInWorldEvent args)

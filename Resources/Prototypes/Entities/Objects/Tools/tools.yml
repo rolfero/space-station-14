@@ -207,6 +207,8 @@
     sprite: Objects/Tools/drill.rsi
     size: 20
   - type: Tool
+    useSound:
+      path: /Audio/Items/drill_use.ogg
     qualities:
       - Screwing
     speed: 1.5
@@ -299,6 +301,8 @@
   - type: TilePrying
   - type: SignalLinker
   - type: Tool
+    useSound:
+      path: /Audio/Items/drill_use.ogg
     qualities:
       - Screwing
     speed: 1.2 # Kept for future adjustments. Currently 1.2x for balance
