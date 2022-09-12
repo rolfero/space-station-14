@@ -65,6 +65,8 @@
         doAfter: 2.5
 
   - node: electronics
+    actions:
+      - !type:UpdateAccess {}
     edges:
     - to: airlock
       conditions:
@@ -82,6 +84,8 @@
 
   - node: airlock
     entity: Airlock
+    completed:
+      - !type:UpdateAccess {}
     edges:
     - to: wired #TODO DOOR ELECTRONICS. If door electronics ever govern access permissions, this step should probably be further down? It makes it too easy to swap permissions around. See also windoor.
       conditions:

@@ -18,6 +18,7 @@ using Content.Shared.Tools.Components;
 using Content.Shared.Verbs;
 using Robust.Shared.Audio;
 using Robust.Shared.Containers;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Physics.Dynamics;
 using Robust.Shared.Player;
 using System.Linq;
@@ -292,7 +293,15 @@ public sealed class DoorSystem : SharedDoorSystem
 
         var board = EntityManager.SpawnEntity(door.BoardPrototype, Transform(uid).Coordinates);
 
-        if(!container.Insert(board))
+        var accessComp = EntityManager.EnsureComponent<AccessReaderComponent>(board);
+
+        if (EntityManager.TryGetComponent(uid, out AccessReaderComponent? access))
+        {
+            accessComp.AccessLists.Clear();
+            accessComp.AccessLists.AddRange(access.AccessLists);
+        }
+
+        if (!container.Insert(board))
             Logger.Warning($"Couldn't insert board {ToPrettyString(board)} into door {ToPrettyString(uid)}!");
     }
 
