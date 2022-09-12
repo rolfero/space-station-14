@@ -328,6 +328,9 @@ namespace Content.Server.Construction
 
             QueueDel(uid);
 
+            if (GetCurrentNode(newUid, newConstruction) is { } node)
+                PerformActions(newUid, userUid, node.ConstructionActions);
+
             return newUid;
         }
 
