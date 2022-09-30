@@ -131,6 +131,12 @@ public sealed class MeleeWeaponComponent : Component
     [DataField("examinePriority")]
     public int ExaminePriority = 10;
 
+    [DataField("examinePriorityAttackRate")]
+    public int ExaminePriorityAttackRate = 8;
+
+    [DataField("examinePriorityRange")]
+    public int ExaminePriorityRange = 7;
+
 
 }
 
