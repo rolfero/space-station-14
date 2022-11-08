@@ -1,5 +1,4 @@
 using System;
-using Content.Client.IconSmoothing;
 using Content.Client.Wires.Visualizers;
 using Content.Shared.Doors.Components;
 using JetBrains.Annotations;
@@ -11,12 +10,11 @@ using Robust.Shared.IoC;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.Manager.Attributes;
 using Robust.Shared.Timing;
-using static Content.Client.IconSmoothing.IconSmoothSystem;
 
 namespace Content.Client.Doors
 {
     [UsedImplicitly]
-    public sealed class AirlockVisualizer : AppearanceVisualizer, ISerializationHooks
+    public sealed class HiddenDoorVisualizer : AppearanceVisualizer, ISerializationHooks
     {
         [Dependency] private readonly IEntityManager _entMan = default!;
         [Dependency] private readonly IGameTiming _gameTiming = default!;
@@ -30,8 +28,6 @@ namespace Content.Client.Doors
         [DataField("denyAnimationTime")]
         private float _denyDelay = 0.3f;
 
-        [DataField("stateSuffix")]
-        private string _stateSuffix = string.Empty;
 
         [DataField("emagAnimationTime")]
         private float _delayEmag = 1.5f;
@@ -47,14 +43,7 @@ namespace Content.Client.Doors
         /// Means the door is simply open / closed / opening / closing. No wires or access.
         /// </summary>
         [DataField("simpleVisuals")]
-        private bool _simpleVisuals = false;
-
-        /// <summary>
-        ///     Uses IconSmoothing when closed (like hidden doors do).
-        ///     Requires the IconSmoothComponent.
-        /// </summary>
-        [DataField("smoothWhenClosed")]
-        private bool _smoothWhenClosed = false;
+        private bool _simpleVisuals = true;
 
         /// <summary>
         ///     Whether the BaseUnlit layer should still be visible when the airlock
@@ -83,21 +72,21 @@ namespace Content.Client.Doors
                 var flick = new AnimationTrackSpriteFlick();
                 CloseAnimation.AnimationTracks.Add(flick);
                 flick.LayerKey = DoorVisualLayers.Base;
-                flick.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame($"closing{_stateSuffix}", 0f));
+                flick.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame("closing", 0f));
 
                 if (!_simpleVisuals)
                 {
                     var flickUnlit = new AnimationTrackSpriteFlick();
                     CloseAnimation.AnimationTracks.Add(flickUnlit);
                     flickUnlit.LayerKey = DoorVisualLayers.BaseUnlit;
-                    flickUnlit.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame($"closing_unlit{_stateSuffix}", 0f));
+                    flickUnlit.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame("closing_unlit", 0f));
 
                     if (_animatedPanel)
                     {
                         var flickMaintenancePanel = new AnimationTrackSpriteFlick();
                         CloseAnimation.AnimationTracks.Add(flickMaintenancePanel);
                         flickMaintenancePanel.LayerKey = WiresVisualLayers.MaintenancePanel;
-                        flickMaintenancePanel.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame($"panel_closing{_stateSuffix}", 0f));
+                        flickMaintenancePanel.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame("panel_closing", 0f));
                     }
                 }
             }
@@ -107,21 +96,21 @@ namespace Content.Client.Doors
                 var flick = new AnimationTrackSpriteFlick();
                 OpenAnimation.AnimationTracks.Add(flick);
                 flick.LayerKey = DoorVisualLayers.Base;
-                flick.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame($"opening{_stateSuffix}", 0f));
+                flick.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame("opening", 0f));
 
                 if (!_simpleVisuals)
                 {
                     var flickUnlit = new AnimationTrackSpriteFlick();
                     OpenAnimation.AnimationTracks.Add(flickUnlit);
                     flickUnlit.LayerKey = DoorVisualLayers.BaseUnlit;
-                    flickUnlit.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame($"opening_unlit{_stateSuffix}", 0f));
+                    flickUnlit.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame("opening_unlit", 0f));
 
                     if (_animatedPanel)
                     {
                         var flickMaintenancePanel = new AnimationTrackSpriteFlick();
                         OpenAnimation.AnimationTracks.Add(flickMaintenancePanel);
                         flickMaintenancePanel.LayerKey = WiresVisualLayers.MaintenancePanel;
-                        flickMaintenancePanel.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame($"panel_opening{_stateSuffix}", 0f));
+                        flickMaintenancePanel.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame("panel_opening", 0f));
                     }
                 }
             }
@@ -130,7 +119,7 @@ namespace Content.Client.Doors
                 var flickUnlit = new AnimationTrackSpriteFlick();
                 EmaggingAnimation.AnimationTracks.Add(flickUnlit);
                 flickUnlit.LayerKey = DoorVisualLayers.BaseUnlit;
-                flickUnlit.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame($"sparks{_stateSuffix}", 0f));
+                flickUnlit.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame("sparks", 0f));
             }
 
             if (!_simpleVisuals)
@@ -140,7 +129,7 @@ namespace Content.Client.Doors
                     var flick = new AnimationTrackSpriteFlick();
                     DenyAnimation.AnimationTracks.Add(flick);
                     flick.LayerKey = DoorVisualLayers.BaseUnlit;
-                    flick.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame($"deny_unlit{_stateSuffix}", 0f));
+                    flick.KeyFrames.Add(new AnimationTrackSpriteFlick.KeyFrame("deny_unlit", 0f));
                 }
             }
         }
@@ -191,42 +180,28 @@ namespace Content.Client.Doors
             switch (state)
             {
                 case DoorState.Open:
-                    sprite.LayerSetState(DoorVisualLayers.Base, $"open{_stateSuffix}");
+                    sprite.LayerSetState(DoorVisualLayers.Base, "open");
                     if (_openUnlitVisible && !_simpleVisuals)
                     {
-                        sprite.LayerSetState(DoorVisualLayers.BaseUnlit, $"open_unlit{_stateSuffix}");
+                        sprite.LayerSetState(DoorVisualLayers.BaseUnlit, "open_unlit");
                     }
                     break;
                 case DoorState.Closed:
-                    sprite.LayerSetState(DoorVisualLayers.Base, $"closed{_stateSuffix}");
+                    sprite.LayerSetState(DoorVisualLayers.Base, "closed");
                     if (!_simpleVisuals)
                     {
-                        sprite.LayerSetState(DoorVisualLayers.BaseUnlit, $"closed_unlit{_stateSuffix}");
-                        sprite.LayerSetState(DoorVisualLayers.BaseBolted, $"bolted_unlit{_stateSuffix}");
-                    }
-                    if (_smoothWhenClosed && _entMan.HasComponent<IconSmoothComponent>(component.Owner))
-                    {
-                        sprite.LayerSetVisible(CornerLayers.SE, true);
-                        sprite.LayerSetVisible(CornerLayers.SW, true);
-                        sprite.LayerSetVisible(CornerLayers.NE, true);
-                        sprite.LayerSetVisible(CornerLayers.NW, true);
+                        sprite.LayerSetState(DoorVisualLayers.BaseUnlit, "closed_unlit");
+                        sprite.LayerSetState(DoorVisualLayers.BaseBolted, "bolted_unlit");
                     }
                     break;
                 case DoorState.Opening:
                     animPlayer.Play(OpenAnimation, AnimationKey);
-                    if (_smoothWhenClosed && _entMan.HasComponent<IconSmoothComponent>(component.Owner))
-                    {
-                        sprite.LayerSetVisible(CornerLayers.SE, false);
-                        sprite.LayerSetVisible(CornerLayers.SW, false);
-                        sprite.LayerSetVisible(CornerLayers.NE, false);
-                        sprite.LayerSetVisible(CornerLayers.NW, false);
-                    }
                     break;
                 case DoorState.Closing:
                     if (door.CurrentlyCrushing.Count == 0)
                         animPlayer.Play(CloseAnimation, AnimationKey);
                     else
-                        sprite.LayerSetState(DoorVisualLayers.Base, $"closed{_stateSuffix}");
+                        sprite.LayerSetState(DoorVisualLayers.Base, "closed");
                     break;
                 case DoorState.Denying:
                     animPlayer.Play(DenyAnimation, AnimationKey);
@@ -271,7 +246,7 @@ namespace Content.Client.Doors
         }
     }
 
-    public enum DoorVisualLayers : byte
+    public enum ssssssDoorVisualLayers : byte
     {
         Base,
         BaseUnlit,

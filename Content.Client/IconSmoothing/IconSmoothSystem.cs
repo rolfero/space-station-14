@@ -367,7 +367,7 @@ namespace Content.Client.IconSmoothing
             Clockwise = 4,
         }
 
-        private enum CornerLayers : byte
+        public enum CornerLayers : byte
         {
             SE,
             NE,
