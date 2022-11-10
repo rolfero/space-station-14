@@ -62,6 +62,9 @@
             - !type:SnapToGrid
               southRotation: true
             - !type:SetAnchor {}
+          conditions:
+            - !type:EntityAnchored
+              anchored: false
           steps:
             - material: Steel
               amount: 2
@@ -72,6 +75,9 @@
             - !type:SnapToGrid
               southRotation: true
             - !type:SetAnchor {}
+          conditions:
+            - !type:EntityAnchored
+              anchored: false
           steps:
             - material: Plasteel
               amount: 2

@@ -25,7 +25,6 @@
   - type: Door
     bumpOpen: false
     clickOpen: true
-    weldable: false
     canCrush: false
     closeTimeOne: 0.2
     closeTimeTwo: 0.6
@@ -60,9 +59,9 @@
   - type: Occluder
     sizeX: 32
     sizeY: 32
-#  - type: Construction
-#    graph: Girder
-#    node: HiddenDoor
+  - type: Construction
+    graph: Girder
+    node: HiddenDoor
 
 - type: entity
   id: HiddenDoorReinforced
@@ -73,7 +72,6 @@
   - type: IconSmooth
     key: walls
     base: reinf_over
-    #reinforcedBase: reinf_over
   - type: Appearance
     visuals:
       - type: AirlockVisualizer
@@ -81,6 +79,6 @@
         animationTime: 1.2
         smoothWhenClosed: true
         stateSuffix: reinf
-#  - type: Construction
-#    graph: Girder
-#    node: HiddenDoorReinforced
+  - type: Construction
+    graph: Girder
+    node: HiddenDoorReinforced
